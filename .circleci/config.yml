@@ -1,0 +1,20 @@
+version: 2
+
+jobs:
+
+  tests_golang:
+    working_directory: ~/deploy
+    docker:
+      - image: circleci/golang
+    steps:
+      - checkout
+
+      - run:
+          name: test go packages
+          command: go test ./...
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - tests_golang
