@@ -19,9 +19,9 @@ const help = () =>
 const validate = (prefix, quantity) =>
   new Promise(
     (resolve, reject) =>
-      (!!prefix || !!Number(quantity) ) ?
-        resolve() :
-        reject()
+      (!prefix || isNaN(quantity) ) ?
+        reject() :
+        resolve()
   )
 
 const getRandomItemFromArray = (array) =>
@@ -42,7 +42,7 @@ const generatePeople = (prefix, quantity) =>
   )
 
 const run = (prefix, quantity) =>
-  validate()
+  validate(prefix, quantity)
     .then( () => generatePeople(prefix, quantity) )
     .then( (responses) => Object.assign({}, ...responses) )
     .then(JSON.stringify)
