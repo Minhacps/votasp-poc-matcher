@@ -1,59 +1,53 @@
 #!/usr/bin/env node
-const questions_number = 40
-const modo = process.argv[2]
-const num = parseInt(process.argv[3])
+const questionsQuantity = 40
+const prefix = process.argv[2];
+const quantityText = process.argv[3];
 
-let help = () => {
-    console.log(`
-        Uso:
-          gerador.js <modo> <quantidade>
-          gerador.js eleitor 10
-          gerador.js candidato 1000
-        `)
-    process.exit()
+const possibleResponses = {
+  eleitor: ['CP', 'C', 'I', 'D', 'DP'],
+  candidato: ['CP', 'C', 'D', 'DP'],
 }
 
-let validate = () => {
-    if (process.argv.length !== 4 || !Number.isInteger(num)) {
-        help()
-    }
-}
+const help = () =>
+  console.log(`
+      Uso:
+        gerador.js <modo> <quantidade>
+        gerador.js eleitor 10
+        gerador.js candidato 1000
+      `)
 
-let generate = (idPrefix, num, alternatives) => {
-    responsesPerSubject = {}
+const validate = (prefix, quantity) =>
+  new Promise(
+    (resolve, reject) =>
+      (!prefix || isNaN(quantity) ) ?
+        reject() :
+        resolve()
+  )
 
-    for (subject = 1; subject <= num; subject++) {
-        subjectReponses = []
-        for (question = 0; question < questions_number; question++) {
-            subjectReponses[question] = alternatives[Math.floor(Math.random() * alternatives.length)];
-        }
-        responsesPerSubject[idPrefix+'-'+subject] = subjectReponses
-    }
-    return responsesPerSubject
-}
+const getRandomItemFromArray = (array) =>
+  array[ Math.floor(Math.random() * array.length) ]
 
-let run = () => {
-    validate()
-    switch(modo) {
-        case 'eleitor':
-            data = generate('eleitor', num, ['CP', 'C', 'I', 'D', 'DP'])
-            break;
-        case 'candidato':
-            data = generate('candidato', num, ['CP', 'C', 'D', 'DP'])
-            break;
-        default:
-            help()
-    }
+const generateResponses = (prefix, index) =>
+   Array.from(
+     {length: questionsQuantity},
+     () => getRandomItemFromArray(possibleResponses[prefix])
+   )
 
-    console.log(JSON.stringify(data));
-}
+const generatePeople = (prefix, quantity) =>
+  Array.from(
+    {length: quantity},
+    (value, index) => ({
+      [`${prefix}-${index}`]: generateResponses(prefix)
+    })
+  )
 
-run()
-
-
-
-
-
+const run = (prefix, quantity) =>
+  validate(prefix, quantity)
+    .then( () => generatePeople(prefix, quantity) )
+    .then( (responses) => Object.assign({}, ...responses) )
+    .then(JSON.stringify)
+    .catch(help)
 
 
-
+run(prefix, quantityText)
+  .then(console.log)
