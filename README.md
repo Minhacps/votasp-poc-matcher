@@ -94,3 +94,7 @@ Para cada conjunto de dados, executar 10 vezes e tirar a média para considerar 
 ## Contribuição
 
 Agradecemos por considerar contribuir com o VotaSP! Você encontra como fazê-lo em nosso [Guia de Contribuição](CONTRIBUTING.md).
+
+## Código de Conduta
+
+Para garantir que a comunidade do VotaSP seja acolhedora para todos, leia e siga o nosso [Código de Conduta](CODE_OF_CONDUCT.md).
